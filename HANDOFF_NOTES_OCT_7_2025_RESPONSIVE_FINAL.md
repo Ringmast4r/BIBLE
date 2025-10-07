@@ -449,12 +449,42 @@ Update all tool documentation and sync responsive design changes
 
 ---
 
-## ⚠️ Critical Reminders for Next Developer
+## 🚨 CRITICAL RULE #1 - READ BEFORE CODING 🚨
 
-### NEVER Mention in Commits/Docs:
-- ❌ Do NOT include "Claude" as co-author
-- ❌ Do NOT mention AI assistance
-- ✅ Only credit: @Ringmast4r
+### ⚠️ NEVER CO-AUTHOR WITH CLAUDE OR ANY AI
+
+**MANDATORY:** Before doing ANY work on this project, read `DEVELOPER_RULES.md`
+
+**NEVER, UNDER ANY CIRCUMSTANCES:**
+- ❌ Include Claude as co-author in commits
+- ❌ Use `Co-Authored-By: Claude <noreply@anthropic.com>`
+- ❌ Mention AI assistance in commits, code, or documentation
+- ❌ ALL commits MUST be authored by @Ringmast4r ONLY
+
+**WHY THIS IS CRITICAL:**
+On October 7, 2025, Claude was accidentally added as a co-author in one commit. This made Claude visible as a project contributor on GitHub. We had to:
+1. Delete the entire repository
+2. Lose all commit history
+3. Recreate repository from scratch
+4. Re-upload everything with fresh commits
+
+**Cost:** Hours of work. **Prevention:** FOLLOW THIS RULE.
+
+**ALWAYS verify before pushing:**
+```bash
+git log -1 --format="%an <%ae>"  # Should ONLY show: Ringmast4r <email>
+```
+
+**ALWAYS check after pushing:**
+Visit: https://github.com/Ringmast4r/BIBLE/graphs/contributors
+- Should ONLY show: @Ringmast4r
+- If Claude appears → STOP IMMEDIATELY and contact @Ringmast4r
+
+**See `DEVELOPER_RULES.md` for complete guidelines and procedures.**
+
+---
+
+## ⚠️ Additional Critical Reminders for Next Developer
 
 ### Container Width:
 - ⚠️ NEVER set `max-width: 1600px` on visualization containers

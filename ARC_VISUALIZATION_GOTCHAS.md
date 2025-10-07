@@ -7,6 +7,29 @@
 
 ---
 
+## ⚠️ RULE #1 - NEVER CO-AUTHOR WITH CLAUDE OR ANY AI ⚠️
+
+🚨 **CRITICAL:** Before reading technical gotchas, read this first! 🚨
+
+**NEVER, UNDER ANY CIRCUMSTANCES:**
+- ❌ Include Claude as co-author in commits
+- ❌ Use `Co-Authored-By: Claude` in commit messages
+- ❌ Mention AI assistance in commits, code, or documentation
+- ❌ ALL commits MUST be authored by @Ringmast4r ONLY
+
+**WHY:** We already had to delete the entire repository once because Claude appeared as a contributor. See `DEVELOPER_RULES.md` for complete guidelines.
+
+**ALWAYS verify before pushing:**
+```bash
+git log -1 --format="%an <%ae>"  # Should ONLY show: Ringmast4r
+```
+
+**After pushing, check:** https://github.com/Ringmast4r/BIBLE/graphs/contributors
+- Should ONLY show @Ringmast4r
+- If Claude appears → STOP and see DEVELOPER_RULES.md
+
+---
+
 ## 🚨 CRITICAL GOTCHAS - Read These First!
 
 ### 1. The Tan/ACos Infinity Problem (SOLVED)
