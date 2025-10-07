@@ -2,6 +2,10 @@
 CLAUDE.md
 PROJECT_STATUS.md
 DATA_INVENTORY.md
+DEVELOPER_RULES.md
+HANDOFF_NOTES_*.md
+RESPONSIVE_CONTAINER_FIX.md
+SESSION_AUDIT_*.md
 
 # CSV reference files (keep local only)
 Books.csv

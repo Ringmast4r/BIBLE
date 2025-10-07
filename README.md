@@ -26,18 +26,6 @@
 ![License](https://img.shields.io/badge/License-MIT-blue)
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 
----
-
-## 🚨 FOR DEVELOPERS: READ FIRST
-
-**⚠️ CRITICAL RULE #1:** If you're contributing to this project, **IMMEDIATELY** read [`DEVELOPER_RULES.md`](DEVELOPER_RULES.md) **BEFORE** making any commits.
-
-**Key Rule:** NEVER include Claude or any AI as co-author. ALL commits must be by @Ringmast4r only.
-
-**Why:** We already had to delete and recreate this entire repository once due to accidental AI co-authoring. Don't repeat this mistake!
-
----
-
 ## 🌐 Live Demos
 
 ### 🚀 **[START HERE: Interactive Landing Page](https://ringmast4r.github.io/BIBLE/)**
