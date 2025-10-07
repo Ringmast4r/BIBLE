@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible Cross-Reference Visualizer</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>✟ Bible Cross-Reference Visualizer</h1>
+            <p class="subtitle">Explore 340,000+ connections across Scripture</p>
+            <p style="color: var(--accent-gold); font-size: 0.9rem; margin-top: 5px;">
+                Created by <a href="https://github.com/Ringmast4r" style="color: var(--accent-cyan); text-decoration: none; font-weight: bold;">@Ringmast4r</a>
+            </p>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tabs">
+            <button class="tab-btn active" data-viz="arc">Arc Diagram</button>
+            <button class="tab-btn" data-viz="network">Network Graph</button>
+            <button class="tab-btn" data-viz="chord">Chord Diagram</button>
+            <button class="tab-btn" data-viz="heatmap">Heatmap</button>
+            <button class="tab-btn" data-viz="sunburst">Sunburst</button>
+            <button class="tab-btn" data-viz="geomap">Geographic Map</button>
+            <button class="tab-btn" data-viz="timeline">Timeline</button>
+            <button class="tab-btn" data-viz="people">People Network</button>
+            <button class="tab-btn" data-viz="stats">Statistics</button>
+        </nav>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="control-group">
+                <label for="testament-filter">Testament:</label>
+                <select id="testament-filter">
+                    <option value="all">All</option>
+                    <option value="OT">Old Testament</option>
+                    <option value="NT">New Testament</option>
+                    <option value="cross">OT ↔ NT</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="book-select">Focus Book:</label>
+                <select id="book-select">
+                    <option value="">All Books</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="min-connections">Min Connections:</label>
+                <input type="range" id="min-connections" min="1" max="100" value="1">
+                <span id="min-value">1</span>
+            </div>
+
+            <button id="reset-btn" class="btn">Reset View</button>
+            <button id="theme-btn" class="btn btn-theme">🎨 Theme</button>
+            <button id="export-btn" class="btn btn-primary">Export SVG</button>
+        </div>
+
+        <!-- Visualization Area -->
+        <div class="viz-container">
+            <!-- Arc Diagram -->
+            <div id="arc-viz" class="viz-panel active">
+                <div class="viz-info">
+                    <h3>Arc Diagram</h3>
+                    <p>Visualization of 190,522 chapter connections using circular arcs. Rainbow gradient colors represent distance between chapters. Created by Ringmast4r.</p>
+                </div>
+                <svg id="arc-svg"></svg>
+                <div id="arc-tooltip" class="tooltip"></div>
+            </div>
+
+            <!-- Network Graph -->
+            <div id="network-viz" class="viz-panel">
+                <div class="viz-info">
+                    <h3>Network Graph</h3>
+                    <p>Interactive force-directed graph showing verse relationships. Drag nodes to explore.</p>
+                </div>
+                <svg id="network-svg"></svg>
+                <div id="network-tooltip" class="tooltip"></div>
+            </div>
+
+            <!-- Chord Diagram -->
+            <div id="chord-viz" class="viz-panel">
+                <div class="viz-info">
+                    <h3>Chord Diagram</h3>
+                    <p>Circular diagram showing relationships between Bible books.</p>
+                </div>
+                <svg id="chord-svg"></svg>
+                <div id="chord-tooltip" class="tooltip"></div>
+            </div>
+
+            <!-- Heatmap -->
+            <div id="heatmap-viz" class="viz-panel">
+                <div class="viz-info">
+                    <h3>Cross-Reference Heatmap</h3>
+                    <p>Matrix showing connection density between books. Darker = more connections.</p>
+                </div>
+                <svg id="heatmap-svg"></svg>
+                <div id="heatmap-tooltip" class="tooltip"></div>
+            </div>
+
+            <!-- Sunburst -->
+            <div id="sunburst-viz" class="viz-panel">
+                <div class="viz-info">
+                    <h3>Sunburst Diagram</h3>
+                    <p>Hierarchical view: Testament → Book → Chapter. Click to zoom in.</p>
+                </div>
+                <svg id="sunburst-svg"></svg>
+                <div id="sunburst-tooltip" class="tooltip"></div>
+            </div>
+
+            <!-- Geographic Map -->
+            <div id="geomap-viz" class="viz-panel">
+                <div class="viz-info">
+                    <h3>Geographic Map of Biblical Places</h3>
+                    <p>Explore 1,600+ biblical locations with GPS coordinates. Click places to see cross-references.</p>
+                </div>
+                <div id="geomap-container" style="width: 100%; height: 600px;"></div>
+                <div id="geomap-tooltip" class="tooltip"></div>
+            </div>
+
+            <!-- Timeline -->
+            <div id="timeline-viz" class="viz-panel">
+                <div class="viz-info">
+                    <h3>Biblical Events Timeline</h3>
+                    <p>Chronological view of major biblical events and their connections.</p>
+                </div>
+                <svg id="timeline-svg"></svg>
+                <div id="timeline-tooltip" class="tooltip"></div>
+            </div>
+
+            <!-- People Network -->
+            <div id="people-viz" class="viz-panel">
+                <div class="viz-info">
+                    <h3>Biblical People Network</h3>
+                    <p>Network graph showing relationships between 3,000+ biblical people.</p>
+                </div>
+                <svg id="people-svg"></svg>
+                <div id="people-tooltip" class="tooltip"></div>
+            </div>
+
+            <!-- Statistics -->
+            <div id="stats-viz" class="viz-panel">
+                <div class="viz-info">
+                    <h3>Statistics Dashboard</h3>
+                </div>
+                <div id="stats-content" class="stats-grid"></div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <p>Data: 344,799 cross-references from Treasury of Scripture Knowledge (OpenBible.info)</p>
+            <p>Geographic & People Data: <a href="https://github.com/robertrouse/theographic-bible-metadata" style="color: var(--accent-cyan);">Theographic Bible Metadata</a> (CC BY-SA 4.0)</p>
+            <p>Built with D3.js | <a href="../bible-analysis-tool/README.md">View CMD Tool</a></p>
+        </footer>
+    </div>
+
+    <!-- D3.js Library -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <!-- Preview Data (97KB - loads instantly for immediate visualization) -->
+    <script src="js/preview-data.js"></script>
+
+    <!-- Visualization Scripts -->
+    <script src="js/data-loader.js"></script>
+    <script src="js/theographic-loader.js"></script>
+    <script src="js/arc-diagram-tableau-style.js"></script>
+    <script src="js/network-graph.js"></script>
+    <script src="js/chord-diagram.js"></script>
+    <script src="js/heatmap.js"></script>
+    <script src="js/sunburst.js"></script>
+    <script src="js/geographic-map.js"></script>
+    <script src="js/timeline.js"></script>
+    <script src="js/people-network.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

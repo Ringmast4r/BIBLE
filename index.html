@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bible Cross-Reference Explorer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #FFD700 0%, #00CED1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #00CED1;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #b8b8d1;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #b8b8d1;
+            margin-top: 5px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .tool-card {
+            background: rgba(22, 33, 62, 0.6);
+            border: 2px solid #FFD700;
+            border-radius: 15px;
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #FFD700 0%, #00CED1 100%);
+        }
+
+        .tool-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .tool-title {
+            font-size: 1.8rem;
+            color: #FFD700;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .tool-type {
+            font-size: 0.9rem;
+            color: #00CED1;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tool-description {
+            color: #b8b8d1;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tool-preview {
+            width: 100%;
+            height: 200px;
+            background: #0f1419;
+            border: 2px solid #FFD700;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tool-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .tool-preview-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #FFD700;
+            font-size: 3rem;
+        }
+
+
+        .features-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .features-list li {
+            padding: 5px 0;
+            color: #e0e0e0;
+        }
+
+        .features-list li::before {
+            content: '✓ ';
+            color: #2ecc71;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: #1a1a2e;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #00CED1 0%, #0099CC 100%);
+            color: #ffffff;
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #9370DB 0%, #7B68EE 100%);
+            color: #ffffff;
+        }
+
+        .info-section {
+            background: rgba(22, 33, 62, 0.4);
+            border: 1px solid #00CED1;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+
+        .info-section h2 {
+            color: #FFD700;
+            margin-bottom: 15px;
+            font-size: 1.8rem;
+        }
+
+        .info-section p {
+            color: #b8b8d1;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(255, 215, 0, 0.2);
+            color: #FFD700;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            margin: 5px 5px 5px 0;
+            border: 1px solid #FFD700;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #b8b8d1;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+            margin-top: 60px;
+        }
+
+        footer a {
+            color: #00CED1;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #FFD700;
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-bar {
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="title">✟ Bible Cross-Reference Explorer</div>
+            <div class="subtitle">Explore 340,000+ Scripture Connections + 3,000+ People + 1,600+ Places</div>
+            <div style="color: #2ecc71; font-size: 1.1rem; margin: 10px 0; font-weight: bold;">
+                🆕 NEW: Geographic & Historical Data from Theographic Bible Metadata!
+            </div>
+            <div style="color: #FFD700; font-size: 1rem; margin-bottom: 15px;">
+                Created by <a href="https://github.com/Ringmast4r" style="color: #00CED1; text-decoration: none; font-weight: bold;">@Ringmast4r</a>
+            </div>
+            <div class="description">
+                Four powerful tools to study and visualize Bible cross-references, explore
+                biblical people and places, and discover connections across scripture using
+                data from Treasury of Scripture Knowledge and Theographic Bible Metadata.
+            </div>
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-value">340,000+</div>
+                    <div class="stat-label">Cross-References</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">3,394</div>
+                    <div class="stat-label">Biblical People</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">1,638</div>
+                    <div class="stat-label">Geographic Places</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">1,700+</div>
+                    <div class="stat-label">Historical Events</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">17</div>
+                    <div class="stat-label">Visualizations</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="tools-grid">
+            <!-- Web Visualizer -->
+            <div class="tool-card">
+                <div class="tool-icon">🌐</div>
+                <div class="tool-title">Web Visualizer</div>
+                <div class="tool-type">Interactive Browser Experience</div>
+                <div class="tool-preview">
+                    <div class="tool-preview-placeholder">📊</div>
+                    <!-- Replace with: <img src="screenshots/web-visualizer.png" alt="Web Visualizer Preview"> -->
+                </div>
+                <div class="tool-description">
+                    Stunning D3.js visualizations showing Bible cross-references, biblical places on
+                    world maps, chronological timelines, and people relationship networks.
+                </div>
+                <ul class="features-list">
+                    <li>9 Interactive Visualizations</li>
+                    <li>🗺️ Geographic Map (1,600+ places)</li>
+                    <li>⏱️ Timeline & 👥 People Network</li>
+                    <li>Arc, Network, Chord & More</li>
+                </ul>
+                <a href="bible-visualizer-web/index.html" class="btn">Launch Web App ➜</a>
+            </div>
+
+            <!-- CMD Reader -->
+            <div class="tool-card">
+                <div class="tool-icon">💻</div>
+                <div class="tool-title">CMD Reader</div>
+                <div class="tool-type">Terminal-Based Tool</div>
+                <div class="tool-preview">
+                    <div class="tool-preview-placeholder">⌨️</div>
+                    <!-- Replace with: <img src="screenshots/cmd-reader.png" alt="CMD Reader Preview"> -->
+                </div>
+                <div class="tool-description">
+                    Powerful command-line Bible reader with advanced search, translation comparison,
+                    bookmarks, statistics, and 340,000+ cross-references. 6 color themes and extensive features.
+                </div>
+                <ul class="features-list">
+                    <li>📊 Statistics Dashboard & 📚 Books List</li>
+                    <li>🔄 Compare 4 Translations Side-by-Side</li>
+                    <li>🔍 Advanced Search (OT/NT/Book/Exact)</li>
+                    <li>⭐ Bookmarks, History & Export</li>
+                    <li>⏭️ Next/Prev Navigation & Random Verses</li>
+                    <li>🎨 6 Color Themes + Beautiful Terminal UI</li>
+                </ul>
+                <span class="badge">Python Required</span>
+                <br>
+                <a href="bible-analysis-tool/README.md" class="btn-secondary btn">View Docs</a>
+                <a href="https://github.com/Ringmast4r/BIBLE/tree/main/bible-analysis-tool" class="btn-download btn">Download ⬇</a>
+            </div>
+
+            <!-- Desktop GUI -->
+            <div class="tool-card">
+                <div class="tool-icon">🖥️</div>
+                <div class="tool-title">Desktop GUI</div>
+                <div class="tool-type">Professional Analysis Tool</div>
+                <div class="tool-preview">
+                    <div class="tool-preview-placeholder">🎨</div>
+                    <!-- Replace with: <img src="screenshots/desktop-gui.png" alt="Desktop GUI Preview"> -->
+                </div>
+                <div class="tool-description">
+                    Professional PyQt5 desktop application with 9 interactive visualizations including
+                    3D graphs, geographic maps, timelines, and people networks. Export high-res images.
+                </div>
+                <ul class="features-list">
+                    <li>9 Interactive Visualizations</li>
+                    <li>🗺️ Geographic Map (1,247 places)</li>
+                    <li>👥 People Network (3,069 people)</li>
+                    <li>⏱️ Timeline + Sunburst + Chord</li>
+                    <li>3D Network, Arc, Heatmap & Stats</li>
+                    <li>High-Res Export (300 DPI) & Offline</li>
+                </ul>
+                <span class="badge">Python + PyQt5</span>
+                <br>
+                <a href="bible-visualizer-desktop/README.md" class="btn-secondary btn">View Docs</a>
+                <a href="https://github.com/Ringmast4r/BIBLE/tree/main/bible-visualizer-desktop" class="btn-download btn">Download ⬇</a>
+            </div>
+
+            <!-- Web Terminal (CMD Demo) -->
+            <div class="tool-card">
+                <div class="tool-icon">⌨️</div>
+                <div class="tool-title">Web Terminal</div>
+                <div class="tool-type">Browser-Based CMD Demo</div>
+                <div class="tool-preview">
+                    <div class="tool-preview-placeholder">💻</div>
+                    <!-- Replace with: <img src="screenshots/web-terminal.png" alt="Web Terminal Preview"> -->
+                </div>
+                <div class="tool-description">
+                    Live browser-based terminal emulator of the CMD reader. Try the full Bible search
+                    experience without installing anything - just click and explore!
+                </div>
+                <ul class="features-list">
+                    <li>Terminal-Style Interface</li>
+                    <li>All CMD Features in Browser</li>
+                    <li>No Installation Required</li>
+                    <li>Instant Access</li>
+                </ul>
+                <span class="badge">Online Demo</span>
+                <br>
+                <a href="bible-cmd-web/index.html" class="btn">Launch Terminal ➜</a>
+            </div>
+        </div>
+
+
+        <div class="info-section">
+            <h2>📖 About This Project</h2>
+            <p>
+                This project provides three different interfaces to explore the same comprehensive
+                Bible cross-reference dataset from the Treasury of Scripture Knowledge. Whether you
+                prefer reading in the terminal, exploring visual patterns in the browser, or
+                analyzing with professional 3D graphs, there's an interface designed for you.
+            </p>
+            <p>
+                <strong>Data Source:</strong> All cross-references come from the Treasury of Scripture
+                Knowledge, a public domain collection of 340,000+ verse connections compiled by scholars
+                over centuries. Bible translations include KJV, ASV, WEB, and YLT - all public domain.
+            </p>
+            <p>
+                <strong>Perfect For:</strong> Personal Bible study, sermon preparation, academic research,
+                teaching presentations, discovering thematic connections, and exploring the interconnected
+                structure of Scripture.
+            </p>
+        </div>
+
+        <div class="info-section">
+            <h2>🚀 Quick Start</h2>
+            <p>
+                <strong>🌐 Want to see it now?</strong>
+                <a href="bible-visualizer-web/index.html" style="color: #FFD700; font-weight: bold;">
+                    Launch the Web Visualizer
+                </a> - no installation required, works directly in your browser!
+            </p>
+            <p>
+                <strong>⌨️ Try the terminal demo?</strong>
+                <a href="bible-cmd-web/index.html" style="color: #FFD700; font-weight: bold;">
+                    Launch the Web Terminal
+                </a> or visit the live demo at
+                <a href="https://ringmast4r.github.io/BIBLE/bible-cmd-web/" style="color: #00CED1;">
+                    ringmast4r.github.io
+                </a>
+            </p>
+            <p>
+                <strong>💻 Want to download and run locally?</strong>
+                Visit the <a href="https://github.com/Ringmast4r/BIBLE" style="color: #00CED1;">GitHub repository</a>
+                to clone or download the project. Full installation instructions included.
+            </p>
+            <p>
+                <strong>📚 Need help?</strong>
+                Check out the <a href="README.md" style="color: #00CED1;">main README</a> or
+                <a href="GETTING-STARTED.md" style="color: #00CED1;">Getting Started Guide</a>
+                for detailed instructions on using each tool.
+            </p>
+        </div>
+
+        <footer>
+            <p>
+                <strong>Bible Cross-Reference Explorer</strong> |
+                <a href="https://github.com/Ringmast4r/BIBLE">View on GitHub</a> |
+                <a href="README.md">Documentation</a> |
+                MIT License
+            </p>
+            <p style="margin-top: 15px; color: #888;">
+                May this tool bless your study of God's Word ✟
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

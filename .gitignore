@@ -1,0 +1,31 @@
+# Development and private files - DO NOT COMMIT
+CLAUDE.md
+PROJECT_STATUS.md
+DATA_INVENTORY.md
+
+# CSV reference files (keep local only)
+Books.csv
+chapterIndexes.csv
+Verses.csv
+CrossRefIndex.csv
+create_tableau_csvs.py
+verify_data.py
+
+# Internal dev documentation (keep local only)
+TABLEAU_ARC_DIAGRAM_GUIDE.md
+TABLEAU_QUICK_START.md
+TABLEAU_ALL_BOOKS_GUIDE.md
+TABLEAU_MASTER_SUMMARY.md
+TABLEAU_STYLE_ARC_RECREATION.md
+SESSION_SUMMARY_*.md
+COMPLETE_UPDATE_GUIDE.md
+FINAL_STATUS_OCT_7_2025.md
+
+# Python
+*.pyc
+__pycache__/
+
+# OS
+.DS_Store
+.vscode/
+.idea/
