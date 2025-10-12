@@ -1,4 +1,8 @@
 _dev_notes/
+bible journal/
+assets/book-of-kells-antique.png
+assets/book-of-kells-illuminated.png
+assets/gideons-bible-placement.jpg
 
 *.pyc
 __pycache__/
