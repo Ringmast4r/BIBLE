@@ -81,8 +81,8 @@ class BibleDataLoader {
 
             } else {
                 // PRODUCTION MODE: Use Cloudflare R2 API (lightweight, filtered data)
-                // API endpoint: https://bible-api.YOUR-WORKER-NAME.workers.dev/api/graph
-                apiUrl = 'https://bible-api.ringmast4r.workers.dev/api/graph?testament=all&limit=10000';
+                // API endpoint: https://bible-api.squirequirk.workers.dev/api/graph
+                apiUrl = 'https://bible-api.squirequirk.workers.dev/api/graph?testament=all&limit=10000';
 
                 console.log('☁️ PRODUCTION MODE: Loading from Cloudflare R2 API...');
                 console.log('📡 API URL:', apiUrl);
@@ -110,7 +110,7 @@ class BibleDataLoader {
                 this.updateProgress(80, 'Processing graph data...');
 
                 // Load stats from API
-                const statsResponse = await fetch('https://bible-api.ringmast4r.workers.dev/api/stats');
+                const statsResponse = await fetch('https://bible-api.squirequirk.workers.dev/api/stats');
                 if (statsResponse.ok) {
                     this.stats = await statsResponse.json();
                 }
