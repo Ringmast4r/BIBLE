@@ -51,84 +51,80 @@ class BibleDataLoader {
         if (this.isLoaded && !this.isPreviewMode) return;
 
         try {
-            // Determine if we're on localhost or GitHub Pages
+            // Determine if we're on localhost or production
             const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-            let urls = [];
+            let apiUrl;
 
             if (isLocal) {
-                // Local development - use relative path
-                urls = ['../shared-data/processed/graph_data.json'];
+                // Local development - use local file
+                apiUrl = '../shared-data/processed/graph_data.json';
+
+                console.log('🔧 LOCAL MODE: Loading from file...');
+                this.updateProgress(5, 'Loading local data...');
+
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                console.log('Graph response received, parsing JSON...');
+                this.updateProgress(60, 'Parsing JSON data...');
+                this.graphData = await response.json();
+                this.updateProgress(80, 'Processing graph data...');
+
+                // Load stats locally
+                const statsResponse = await fetch('../shared-data/processed/stats.json');
+                if (statsResponse.ok) {
+                    this.stats = await statsResponse.json();
+                }
+
             } else {
-                // GitHub Pages - try jsDelivr CDN first (faster global delivery), then fallback to GitHub Pages
-                urls = [
-                    'https://cdn.jsdelivr.net/gh/Ringmast4r/BIBLE@main/shared-data/processed/graph_data.json',
-                    '../shared-data/processed/graph_data.json'
-                ];
-            }
+                // PRODUCTION MODE: Use Cloudflare R2 API (lightweight, filtered data)
+                // API endpoint: https://bible-api.YOUR-WORKER-NAME.workers.dev/api/graph
+                apiUrl = 'https://bible-api.ringmast4r.workers.dev/api/graph?testament=all&limit=10000';
 
-            console.log('Loading data from URLs:', urls);
+                console.log('☁️ PRODUCTION MODE: Loading from Cloudflare R2 API...');
+                console.log('📡 API URL:', apiUrl);
+                this.updateProgress(5, 'Connecting to Cloudflare R2...');
 
-            // Load graph data with timeout and CDN fallback
-            console.log('Fetching graph_data.json (14.5MB)...');
-            let graphResponse = null;
-            let lastError = null;
+                const controller = new AbortController();
+                const timeout = setTimeout(() => controller.abort(), 30000);
 
-            for (const url of urls) {
-                try {
-                    console.log(`Attempting to load from: ${url}`);
-                    this.updateProgress(5, 'Connecting to CDN...');
+                const response = await fetch(apiUrl, {
+                    signal: controller.signal,
+                    cache: 'default'
+                });
+                clearTimeout(timeout);
 
-                    const controller = new AbortController();
-                    const timeout = setTimeout(() => controller.abort(), 30000); // 30 second timeout per attempt
+                if (!response.ok) {
+                    throw new Error(`API error! status: ${response.status}`);
+                }
 
-                    graphResponse = await fetch(url, {
-                        signal: controller.signal,
-                        cache: 'default'
-                    });
-                    clearTimeout(timeout);
+                console.log('✅ API connected, downloading filtered data...');
+                this.updateProgress(20, 'Downloading from R2 (optimized)...');
 
-                    if (graphResponse.ok) {
-                        console.log(`✅ Successfully connected to: ${url}`);
-                        this.updateProgress(20, 'Downloading 14.5MB dataset...');
-                        break;
-                    }
-                } catch (error) {
-                    console.warn(`Failed to load from ${url}:`, error.message);
-                    lastError = error;
-                    graphResponse = null;
+                console.log('Parsing API response...');
+                this.updateProgress(60, 'Parsing filtered data...');
+                this.graphData = await response.json();
+                this.updateProgress(80, 'Processing graph data...');
+
+                // Load stats from API
+                const statsResponse = await fetch('https://bible-api.ringmast4r.workers.dev/api/stats');
+                if (statsResponse.ok) {
+                    this.stats = await statsResponse.json();
                 }
             }
 
-            if (!graphResponse || !graphResponse.ok) {
-                throw lastError || new Error('Failed to load from all sources');
-            }
-
-            console.log('Graph response received, parsing JSON...');
-            this.updateProgress(60, 'Parsing 14.5MB JSON data...');
-            this.graphData = await graphResponse.json();
-            this.updateProgress(80, 'Processing graph data...');
-            console.log('Graph data loaded successfully:', Object.keys(this.graphData));
-
-            // Load statistics
-            const statsUrl = isLocal
-                ? '../shared-data/processed/stats.json'
-                : 'https://cdn.jsdelivr.net/gh/Ringmast4r/BIBLE@main/shared-data/processed/stats.json';
-
-            const statsResponse = await fetch(statsUrl);
-            if (!statsResponse.ok) {
-                throw new Error(`HTTP error! status: ${statsResponse.status}`);
-            }
-            this.stats = await statsResponse.json();
-
             this.isLoaded = true;
-            this.isPreviewMode = false; // Full data loaded
-            this.updateProgress(100, 'Full dataset loaded!');
+            this.isPreviewMode = false;
+            this.updateProgress(100, 'Dataset loaded!');
 
-            console.log('✓ Full data loaded successfully:', {
-                books: this.graphData.metadata.total_books,
-                chapters: this.graphData.metadata.total_chapters,
-                connections: this.graphData.metadata.total_connections
+            console.log('✓ Data loaded successfully:', {
+                mode: isLocal ? 'LOCAL' : 'R2 API',
+                books: this.graphData.metadata?.total_books || this.graphData.books?.length,
+                chapters: this.graphData.metadata?.total_chapters || this.graphData.chapters?.length,
+                connections: this.graphData.metadata?.total_connections || this.graphData.connections?.length
             });
 
             return this.graphData;
@@ -136,7 +132,7 @@ class BibleDataLoader {
             console.error('Error loading data:', error);
 
             if (error.name === 'AbortError') {
-                throw new Error('Request timed out after 60 seconds. The 15MB file may be loading slowly. Please try again or check your internet connection.');
+                throw new Error('Request timed out after 30 seconds. Please try again or check your internet connection.');
             }
 
             console.error('Full error details:', {

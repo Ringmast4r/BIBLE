@@ -3,8 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bible Cross-Reference Visualizer</title>
+    <title>Bible Cross-Reference Visualizer - 340,000+ Scripture Connections | @Ringmast4r</title>
+    <meta name="description" content="Explore 340,000+ Bible cross-references with interactive visualizations. Created by @Ringmast4r. Features arc diagrams, network graphs, geographic maps, and more.">
+    <meta name="keywords" content="Bible, cross-references, visualization, scripture, biblical study, @Ringmast4r, Treasury of Scripture Knowledge">
+    <meta name="author" content="@Ringmast4r">
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR-PUBLISHER-ID"
+            crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="css/styles.css">
+
+    <style>
+        /* ringmast4r watermark */
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(26, 26, 46, 0.9);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid var(--accent-gold);
+            z-index: 10000;
+            font-size: 0.85rem;
+            color: var(--accent-cyan);
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        .watermark a {
+            color: var(--accent-gold);
+            text-decoration: none;
+        }
+
+        .watermark a:hover {
+            color: var(--accent-cyan);
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -155,8 +190,13 @@
         <footer>
             <p>Data: 344,799 cross-references from Treasury of Scripture Knowledge (OpenBible.info)</p>
             <p>Geographic & People Data: <a href="https://github.com/robertrouse/theographic-bible-metadata" style="color: var(--accent-cyan);">Theographic Bible Metadata</a> (CC BY-SA 4.0)</p>
-            <p>Built with D3.js | <a href="../bible-analysis-tool/README.md">View CMD Tool</a></p>
+            <p>Built with D3.js | Created by <a href="https://github.com/Ringmast4r" style="color: var(--accent-gold);">@Ringmast4r</a> | <a href="../bible-analysis-tool/README.md">View CMD Tool</a></p>
         </footer>
+    </div>
+
+    <!-- ringmast4r watermark -->
+    <div class="watermark">
+        ✟ Built by <a href="https://github.com/Ringmast4r" target="_blank">@Ringmast4r</a>
     </div>
 
     <!-- D3.js Library -->
@@ -177,5 +217,11 @@
     <script src="js/timeline.js"></script>
     <script src="js/people-network.js"></script>
     <script src="js/main.js"></script>
+
+    <!-- Google AdSense Display Ad -->
+    <script>
+        // Optional: Insert display ads programmatically
+        // (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
 </body>
 </html>
